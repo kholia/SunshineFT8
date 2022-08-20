@@ -1,0 +1,50 @@
+#if !defined(PSK_REPORTER_H)
+#define PSK_REPORTER_H
+
+#include <string>
+#include <vector>
+
+struct SenderRecord
+{
+  std::string callsign;
+  unsigned int frequency;
+  char snr;
+  std::string mode;
+  char infoSource;
+  int flowTimeSeconds;
+
+  SenderRecord(std::string callsign, unsigned int frequency, char snr);
+
+  int recordSize();
+  void encode(char* buf);
+};
+
+class PskReporter
+{
+  public:
+    unsigned int randomIdentifier_;
+
+    PskReporter(std::string callsign, std::string gridSquare, std::string software);
+    virtual ~PskReporter();
+
+    void addReceiveRecord(std::string callsign, unsigned int frequency, char snr);
+    unsigned char* send(int *length);
+
+  private:
+    unsigned int currentSequenceNumber_;
+
+    std::string receiverCallsign_;
+    std::string receiverGridSquare_;
+    std::string decodingSoftware_;
+    std::vector<SenderRecord> recordList_;
+
+    int getRxDataSize_();
+    int getTxDataSize_();
+    void encodeReceiverRecord_(char* buf);
+    void encodeSenderRecords_(char* buf);
+
+    bool reportCommon_();
+};
+
+
+#endif // PSK_REPORTER_H

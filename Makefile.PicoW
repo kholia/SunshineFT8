@@ -1,0 +1,2 @@
+dummy:
+	cmake -DPICO_BOARD=pico_w -DWIFI_SSID="home" -DWIFI_PASSWORD="acden123" .
